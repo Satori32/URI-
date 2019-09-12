@@ -12,7 +12,7 @@ std::string ItoA(std::int64_t N, const std::string& Ch) {
 	bool F = N >= 0 ? true : false;
 	while (N != 0) {
 		R += Ch[N % Ch.size()];
-		N /= Ch.size();
+		N /= Ch.size();//radix divide
 	}
 	if (!F) R += '-';
 
@@ -28,7 +28,7 @@ std::intmax_t AtoI(const std::string& S, const std::string& Ch) {
 	for(auto &o:S){
 		if (o == '-')continue;
 		auto it = std::find(Ch.begin(), Ch.end(),o);
-		R *= Ch.size();
+		R *= Ch.size();//radix multiple.
 		R += std::distance(Ch.begin(), it);
 	}
 	if (!F)R *= -1;
@@ -66,18 +66,34 @@ std::string ReversibleHash_Decode(const std::string& S,std::string C) {
 	return R;
 }
 int main() {
-	std::string R;
-	std::string S;
+	{
+		std::string R;
+		std::string S;
 
-	S = "ウィキペディア";
+		S = "ウィキペディア";
 
-	R = ReversibleHash_Encode(S,"0123456789");
+		R = ReversibleHash_Encode(S, "0123456789");
 
-	std::cout << R << std::endl;
-	
-	R = ReversibleHash_Decode(R,"0123456789");
+		std::cout << R << std::endl;
 
-	std::cout << R << std::endl;
-	
+		R = ReversibleHash_Decode(R, "0123456789");
+
+		std::cout << R << std::endl;
+	}
+	{
+		//dictionary Crypt.
+		std::string R;
+		std::string S;
+		std::string Ch = "abcdefghijklnmopqrstuvwxyz0123456789";
+		S = "ウィキペディア";
+
+		R = ReversibleHash_Encode(S, Ch);
+
+		std::cout << R << std::endl;
+
+		R = ReversibleHash_Decode(R, Ch);
+
+		std::cout << R << std::endl;
+	}
 	return 0;
 }
