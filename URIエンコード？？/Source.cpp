@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <cstdint>
+#include <algorithm>
+
+//this is not URI_Encode.
+//this is like a URI_encode.not same.
+
+std::string ItoA(std::int64_t N, const std::string& Ch) {
+	std::string R;
+	bool F = N >= 0 ? true : false;
+	while (N != 0) {
+		R += Ch[N % Ch.size()];
+		N /= Ch.size();
+	}
+	if (!F) R += '-';
+
+	std::reverse(R.begin(), R.end());
+
+	return R;
+
+
+}
+std::intmax_t AtoI(const std::string& S, const std::string& Ch) {
+	std::uintmax_t R=0;
+	bool F = S[0] != '-'? true : false;
+	for(auto &o:S){
+		if (o == '-')continue;
+		auto it = std::find(Ch.begin(), Ch.end(),o);
+		R *= Ch.size();
+		R += std::distance(Ch.begin(), it);
+	}
+	if (!F)R *= -1;
+
+	return R;
+
+
+}
+
+std::string ReversibleHash_Encode(const std::string& S,std::string C) {
+	std::string R;
+	for (auto& o : S) {
+		R += '%';
+		R += ItoA(static_cast<std::uint8_t>(o), C);
+	}
+	return R;
+}
+std::string ReversibleHash_Decode(const std::string& S,std::string C) {
+	std::string R;
+	std::string V;
+	bool F = true;
+	for (auto& o : S) {
+		std::uint8_t N = o;
+		if (o != '%') {
+			F = false;
+			V += o;
+		}
+		else {
+			if (F)continue;
+			R += AtoI(V.data(),C);
+			V.clear();
+		}
+	}
+	if (V.size())R += AtoI(V.data(), C);
+	return R;
+}
+int main() {
+	std::string R;
+	std::string S;
+
+	S = "ウィキペディア";
+
+	R = ReversibleHash_Encode(S,"0123456789");
+
+	std::cout << R << std::endl;
+	
+	R = ReversibleHash_Decode(R,"0123456789");
+
+	std::cout << R << std::endl;
+	
+	return 0;
+}
