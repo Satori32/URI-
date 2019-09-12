@@ -7,7 +7,8 @@
 //this is not URI_Encode.
 //this is like a URI_encode.not same.
 
-std::string ItoA(std::int64_t N, const std::string& Ch) {
+//Yaki is Burn.ÄBno mean postfix.
+std::string ItoAYaki(std::int64_t N, const std::string& Ch) {
 	std::string R;
 	bool F = N >= 0 ? true : false;
 	while (N != 0) {
@@ -22,7 +23,7 @@ std::string ItoA(std::int64_t N, const std::string& Ch) {
 
 
 }
-std::intmax_t AtoI(const std::string& S, const std::string& Ch) {
+std::intmax_t AtoIYaki(const std::string& S, const std::string& Ch) {//this is not reference to gryph.
 	std::uintmax_t R=0;
 	bool F = S[0] != '-'? true : false;
 	for(auto &o:S){
@@ -42,7 +43,7 @@ std::string ReversibleHash_Encode(const std::string& S,std::string C) {
 	std::string R;
 	for (auto& o : S) {
 		R += '%';
-		R += ItoA(static_cast<std::uint8_t>(o), C);
+		R += ItoAYaki(static_cast<std::uint8_t>(o), C);
 	}
 	return R;
 }
@@ -51,18 +52,18 @@ std::string ReversibleHash_Decode(const std::string& S,std::string C) {
 	std::string V;
 	bool F = true;
 	for (auto& o : S) {
-		std::uint8_t N = o;
+		std::intmax_t N = o;
 		if (o != '%') {
 			F = false;
 			V += o;
 		}
 		else {
 			if (F)continue;
-			R += AtoI(V.data(),C);
+			R += AtoIYaki(V.data(),C);
 			V.clear();
 		}
 	}
-	if (V.size())R += AtoI(V.data(), C);
+	if (V.size())R += AtoIYaki(V.data(), C);
 	return R;
 }
 int main() {
